@@ -24,9 +24,25 @@ public class DiscordListener extends ListenerAdapter {
 
         openRouterService.getChatCompletion(userMessage)
                 .subscribe(
-                        // Azione da eseguire in caso di successo
-                        botResponse -> event.getChannel().sendMessage(botResponse).queue(),
-                        // Azione da eseguire in caso di errore
+                        botResponse -> {
+                            if (botResponse == null || botResponse.isEmpty()) {
+                                return;
+                            }
+
+                            final int LIMIT = 2000;
+                            int length = botResponse.length();
+
+                            if (length <= LIMIT) {
+                                event.getChannel().sendMessage(botResponse).queue();
+                            } else {
+                                // Spezza in chunk da massimo LIMIT caratteri e invia ciascuno
+                                for (int start = 0; start < length; start += LIMIT) {
+                                    int end = Math.min(length, start + LIMIT);
+                                    String part = botResponse.substring(start, end);
+                                    event.getChannel().sendMessage(part).queue();
+                                }
+                            }
+                        },
                         error -> {
                             System.err.println("Errore durante la chiamata a OpenRouter: " + error.getMessage());
                             event.getChannel().sendMessage("Oops! Qualcosa è andato storto.").queue();
