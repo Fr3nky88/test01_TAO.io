@@ -26,12 +26,11 @@ public class OpenRouterService {
                 .build();
     }
 
-    public Mono<String> getChatCompletion(String userMessage) {
+    // MODIFICATO: Accetta una lista di messaggi (la cronologia)
+    public Mono<String> getChatCompletion(List<Map<String, String>> conversationHistory) {
         Map<String, Object> requestBody = Map.of(
                 "model", modelName,
-                "messages", List.of(
-                        Map.of("role", "user", "content", userMessage)
-                )
+                "messages", conversationHistory
         );
 
         return webClient.post()
@@ -44,7 +43,6 @@ public class OpenRouterService {
     }
 
     private String extractContentFromResponse(String responseBody) {
-        // Estrai il contenuto del messaggio dalla risposta JSON
         Map<String, Object> bodyAsMap = gson.fromJson(responseBody, Map.class);
         List<Map<String, Object>> choices = (List<Map<String, Object>>) bodyAsMap.get("choices");
         if (choices == null || choices.isEmpty()) {
