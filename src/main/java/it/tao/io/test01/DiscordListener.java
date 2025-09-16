@@ -9,7 +9,10 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -17,6 +20,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +31,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DiscordListener extends ListenerAdapter {
 
+    private static final Logger logger = LoggerFactory.getLogger(DiscordListener.class);
+
     private final OpenRouterService openRouterService;
     private final ObjectMapper objectMapper;
     private Map<String, List<Map<String, String>>> conversationHistories = new ConcurrentHashMap<>();
@@ -32,46 +40,137 @@ public class DiscordListener extends ListenerAdapter {
     @Value("${app.conversation.history.path}")
     private String historyFilePath;
 
+    @Value("${app.conversation.auto-save.enabled:true}")
+    private boolean autoSaveEnabled;
+
+    @Value("${app.conversation.backup.enabled:true}")
+    private boolean backupEnabled;
+
+    @Value("${app.conversation.backup.path:./data/backups}")
+    private String backupPath;
+
+    @Value("${app.conversation.backup.max-files:10}")
+    private int maxBackupFiles;
+
     private static final int MAX_CONTEXT_TOKENS = 120000;
     private static final int DISCORD_MESSAGE_LIMIT = 2000;
 
     public DiscordListener(OpenRouterService openRouterService, ObjectMapper objectMapper) {
         this.openRouterService = openRouterService;
         this.objectMapper = objectMapper;
+        logger.info("DiscordListener inizializzato");
     }
 
     @PostConstruct
     public void loadHistory() {
+        logger.info("Inizializzazione del sistema di cronologia conversazioni");
         try {
             // Crea la directory se non esiste
             Path filePath = Paths.get(historyFilePath);
             Path parentDir = filePath.getParent();
             if (parentDir != null && !Files.exists(parentDir)) {
                 Files.createDirectories(parentDir);
-                System.out.println("Directory creata: " + parentDir);
+                logger.info("Directory creata: {}", parentDir);
+            }
+
+            // Crea la directory di backup se abilitata
+            if (backupEnabled) {
+                Path backupDir = Paths.get(backupPath);
+                if (!Files.exists(backupDir)) {
+                    Files.createDirectories(backupDir);
+                    logger.info("Directory backup creata: {}", backupDir);
+                }
             }
 
             File historyFile = new File(historyFilePath);
             if (historyFile.exists()) {
                 // Legge la mappa dal file JSON se esiste
                 conversationHistories = objectMapper.readValue(historyFile, new TypeReference<ConcurrentHashMap<String, List<Map<String, String>>>>() {});
-                System.out.println("Cronologia conversazioni caricata da " + historyFilePath);
+                logger.info("Cronologia conversazioni caricata da: {} - {} canali trovati", historyFilePath, conversationHistories.size());
+
+                // Log dettagliato delle conversazioni caricate
+                conversationHistories.forEach((channelId, history) ->
+                    logger.debug("Canale {}: {} messaggi caricati", channelId, history.size())
+                );
             } else {
-                System.out.println("File di cronologia non trovato, sarà creato al primo salvataggio: " + historyFilePath);
+                logger.info("File di cronologia non trovato, sarà creato al primo salvataggio: {}", historyFilePath);
             }
         } catch (IOException e) {
-            System.err.println("Impossibile caricare la cronologia delle conversazioni: " + e.getMessage());
+            logger.error("Impossibile caricare la cronologia delle conversazioni", e);
         }
     }
 
     @PreDestroy
     public void saveHistory() {
+        logger.info("Salvataggio finale della cronologia conversazioni");
+        saveHistoryToFile();
+    }
+
+    @Scheduled(fixedRateString = "${app.conversation.auto-save.interval:30000}")
+    public void autoSaveHistory() {
+        if (autoSaveEnabled) {
+            logger.debug("Esecuzione salvataggio automatico della cronologia");
+            saveHistoryToFile();
+        }
+    }
+
+    private void saveHistoryToFile() {
         try {
+            // Crea backup se abilitato
+            if (backupEnabled && Files.exists(Paths.get(historyFilePath))) {
+                createBackup();
+            }
+
             // Salva la mappa corrente nel file JSON
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(historyFilePath), conversationHistories);
-            System.out.println("Cronologia conversazioni salvata in " + historyFilePath);
+            logger.debug("Cronologia conversazioni salvata in: {} - {} canali", historyFilePath, conversationHistories.size());
+
+            // Log statistiche dettagliate
+            int totalMessages = conversationHistories.values().stream()
+                .mapToInt(List::size)
+                .sum();
+            logger.debug("Statistiche salvataggio: {} canali, {} messaggi totali", conversationHistories.size(), totalMessages);
+
         } catch (IOException e) {
-            System.err.println("Impossibile salvare la cronologia delle conversazioni: " + e.getMessage());
+            logger.error("Impossibile salvare la cronologia delle conversazioni", e);
+        }
+    }
+
+    private void createBackup() {
+        try {
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            String backupFileName = "conversation_history_" + timestamp + ".json";
+            Path backupFilePath = Paths.get(backupPath, backupFileName);
+
+            Files.copy(Paths.get(historyFilePath), backupFilePath, StandardCopyOption.REPLACE_EXISTING);
+            logger.info("Backup creato: {}", backupFilePath);
+
+            // Pulisce i vecchi backup
+            cleanOldBackups();
+
+        } catch (IOException e) {
+            logger.error("Errore durante la creazione del backup", e);
+        }
+    }
+
+    private void cleanOldBackups() {
+        try {
+            Path backupDir = Paths.get(backupPath);
+            List<Path> backupFiles = Files.list(backupDir)
+                .filter(path -> path.getFileName().toString().startsWith("conversation_history_"))
+                .sorted((p1, p2) -> p2.getFileName().compareTo(p1.getFileName())) // Ordine decrescente per data
+                .toList();
+
+            if (backupFiles.size() > maxBackupFiles) {
+                for (int i = maxBackupFiles; i < backupFiles.size(); i++) {
+                    Files.delete(backupFiles.get(i));
+                    logger.debug("Backup obsoleto rimosso: {}", backupFiles.get(i));
+                }
+                logger.info("Pulizia backup completata. Mantenuti {} file su {}", maxBackupFiles, backupFiles.size());
+            }
+
+        } catch (IOException e) {
+            logger.error("Errore durante la pulizia dei backup", e);
         }
     }
 
@@ -80,8 +179,11 @@ public class DiscordListener extends ListenerAdapter {
     }
 
     private void sendLongMessage(MessageReceivedEvent event, String message) {
+        logger.debug("Invio messaggio lungo. Lunghezza: {} caratteri", message.length());
+
         if (message.length() <= DISCORD_MESSAGE_LIMIT) {
             event.getChannel().sendMessage(message).queue();
+            logger.debug("Messaggio inviato direttamente (sotto il limite)");
             return;
         }
 
@@ -108,9 +210,12 @@ public class DiscordListener extends ListenerAdapter {
             parts.add(remaining.trim());
         }
 
+        logger.info("Messaggio diviso in {} parti", parts.size());
+
         // Invia ogni parte come messaggio separato
-        for (String part : parts) {
-            event.getChannel().sendMessage(part).queue();
+        for (int i = 0; i < parts.size(); i++) {
+            event.getChannel().sendMessage(parts.get(i)).queue();
+            logger.debug("Parte {}/{} inviata", i + 1, parts.size());
         }
     }
 
@@ -123,6 +228,12 @@ public class DiscordListener extends ListenerAdapter {
         User selfUser = event.getJDA().getSelfUser();
         String selfId = selfUser.getId();
         String rawContent = event.getMessage().getContentRaw();
+        String channelId = event.getChannel().getId();
+        String userId = event.getAuthor().getId();
+        String username = event.getAuthor().getName();
+
+        logger.debug("Messaggio ricevuto - Canale: {}, Utente: {} ({}), Contenuto: {}",
+                    channelId, username, userId, rawContent);
 
         // Controlla se il bot è stato menzionato direttamente
         boolean isMentioned = rawContent.contains("<@" + selfId + ">") || rawContent.contains("<@!" + selfId + ">");
@@ -138,15 +249,16 @@ public class DiscordListener extends ListenerAdapter {
                 // Controlla se c'è almeno un ruolo in comune
                 if (!java.util.Collections.disjoint(botRoles, mentionedRoles)) {
                     isMentioned = true;
+                    logger.debug("Bot menzionato tramite ruolo nel canale: {}", channelId);
                 }
             }
         }
 
         if (isMentioned) {
+            logger.info("Bot menzionato - Elaborazione messaggio per canale: {}, utente: {}", channelId, username);
+
             // Mostra l'indicatore "sta scrivendo..." nel canale
             event.getChannel().sendTyping().queue();
-
-            String channelId = event.getChannel().getId();
 
             // Rimuove tutte le menzioni (sia utente che ruolo) dal messaggio
             String userMessageContent = event.getMessage().getContentRaw()
@@ -155,34 +267,55 @@ public class DiscordListener extends ListenerAdapter {
                     .trim();
 
             if (userMessageContent.isEmpty()) {
+                logger.warn("Messaggio vuoto dopo rimozione menzioni - Canale: {}", channelId);
                 return;
             }
 
+            logger.debug("Messaggio pulito: {}", userMessageContent);
+
             List<Map<String, String>> history = conversationHistories.computeIfAbsent(
                     channelId,
-                    k -> new ArrayList<>()
+                    k -> {
+                        logger.info("Nuova cronologia creata per il canale: {}", channelId);
+                        return new ArrayList<>();
+                    }
             );
 
             history.add(Map.of("role", "user", "content", userMessageContent));
+            logger.debug("Messaggio aggiunto alla cronologia - Canale: {}, Messaggi totali: {}", channelId, history.size());
 
+            // Gestione del limite di token
             int currentTokenCount = 0;
             for (Map<String, String> message : history) {
                 currentTokenCount += estimateTokens(message.get("content"));
             }
 
+            int removedMessages = 0;
             while (currentTokenCount > MAX_CONTEXT_TOKENS && !history.isEmpty()) {
                 Map<String, String> removedMessage = history.removeFirst();
                 currentTokenCount -= estimateTokens(removedMessage.get("content"));
+                removedMessages++;
             }
+
+            if (removedMessages > 0) {
+                logger.info("Rimossi {} messaggi dalla cronologia per gestire il limite di token - Canale: {}",
+                           removedMessages, channelId);
+            }
+
+            logger.debug("Token stimati per il contesto: {} - Canale: {}", currentTokenCount, channelId);
 
             openRouterService.getChatCompletion(history)
                     .subscribe(
                             botResponse -> {
+                                logger.info("Risposta ricevuta da OpenRouter - Canale: {}, Lunghezza: {} caratteri",
+                                           channelId, botResponse.length());
                                 sendLongMessage(event, botResponse);
                                 history.add(Map.of("role", "assistant", "content", botResponse));
+                                logger.debug("Risposta aggiunta alla cronologia - Canale: {}, Messaggi totali: {}",
+                                           channelId, history.size());
                             },
                             error -> {
-                                System.err.println("Errore durante la chiamata a OpenRouter: " + error.getMessage());
+                                logger.error("Errore durante la chiamata a OpenRouter - Canale: {}", channelId, error);
                                 event.getChannel().sendMessage("Oops! Qualcosa è andato storto.").queue();
                             }
                     );

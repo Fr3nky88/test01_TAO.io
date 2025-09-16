@@ -9,19 +9,23 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Crea la directory per i dati persistenti
-RUN mkdir -p /app/data
+# Crea le directory per i dati persistenti, log e backup
+RUN mkdir -p /app/data /app/logs /app/data/backups
 
 # Copia il JAR dall'immagine di build
 COPY --from=build /app/target/*.jar app.jar
 
-# Crea un volume per i dati persistenti
-VOLUME ["/app/data"]
+# Crea volumi per i dati persistenti, log e backup
+VOLUME ["/app/data", "/app/logs"]
 
 # Espone la porta (se necessario)
 EXPOSE 8080
 
 # Imposta le variabili d'ambiente di default
-ENV CONVERSATION_HISTORY_PATH=/app/data/conversation_history.json
+ENV CONVERSATION_HISTORY_PATH=/app/data/conversation_history.json \
+    LOG_FILE_PATH=/app/logs/test01-tao.log \
+    BACKUP_PATH=/app/data/backups \
+    AUTO_SAVE_ENABLED=true \
+    BACKUP_ENABLED=true
 
 ENTRYPOINT ["java","-jar","app.jar"]
