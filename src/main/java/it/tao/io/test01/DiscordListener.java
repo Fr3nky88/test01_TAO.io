@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class DiscordListener extends ListenerAdapter {
@@ -156,19 +160,20 @@ public class DiscordListener extends ListenerAdapter {
     private void cleanOldBackups() {
         try {
             Path backupDir = Paths.get(backupPath);
-            List<Path> backupFiles = Files.list(backupDir)
-                .filter(path -> path.getFileName().toString().startsWith("conversation_history_"))
-                .sorted((p1, p2) -> p2.getFileName().compareTo(p1.getFileName())) // Ordine decrescente per data
-                .toList();
+            try (var stream = Files.list(backupDir)) {
+                List<Path> backupFiles = stream
+                    .filter(path -> path.getFileName().toString().startsWith("conversation_history_"))
+                    .sorted((p1, p2) -> p2.getFileName().compareTo(p1.getFileName())) // Ordine decrescente per data
+                    .toList();
 
-            if (backupFiles.size() > maxBackupFiles) {
-                for (int i = maxBackupFiles; i < backupFiles.size(); i++) {
-                    Files.delete(backupFiles.get(i));
-                    logger.debug("Backup obsoleto rimosso: {}", backupFiles.get(i));
+                if (backupFiles.size() > maxBackupFiles) {
+                    for (int i = maxBackupFiles; i < backupFiles.size(); i++) {
+                        Files.delete(backupFiles.get(i));
+                        logger.debug("Backup obsoleto rimosso: {}", backupFiles.get(i));
+                    }
+                    logger.info("Pulizia backup completata. Mantenuti {} file su {}", maxBackupFiles, backupFiles.size());
                 }
-                logger.info("Pulizia backup completata. Mantenuti {} file su {}", maxBackupFiles, backupFiles.size());
             }
-
         } catch (IOException e) {
             logger.error("Errore durante la pulizia dei backup", e);
         }
@@ -194,7 +199,7 @@ public class DiscordListener extends ListenerAdapter {
         while (remaining.length() > DISCORD_MESSAGE_LIMIT) {
             // Cerca un punto di interruzione naturale (spazio, punto, virgola) prima del limite
             int breakPoint = DISCORD_MESSAGE_LIMIT;
-            for (int i = DISCORD_MESSAGE_LIMIT - 1; i > DISCORD_MESSAGE_LIMIT - 200 && i >= 0; i--) {
+            for (int i = DISCORD_MESSAGE_LIMIT - 1; i > DISCORD_MESSAGE_LIMIT - 200; i--) {
                 char c = remaining.charAt(i);
                 if (c == ' ' || c == '\n' || c == '.' || c == ',' || c == ';' || c == '!' || c == '?') {
                     breakPoint = i + 1;
@@ -304,21 +309,36 @@ public class DiscordListener extends ListenerAdapter {
 
             logger.debug("Token stimati per il contesto: {} - Canale: {}", currentTokenCount, channelId);
 
-            openRouterService.getChatCompletion(history)
-                    .subscribe(
-                            botResponse -> {
-                                logger.info("Risposta ricevuta da OpenRouter - Canale: {}, Lunghezza: {} caratteri",
-                                           channelId, botResponse.length());
-                                sendLongMessage(event, botResponse);
-                                history.add(Map.of("role", "assistant", "content", botResponse));
-                                logger.debug("Risposta aggiunta alla cronologia - Canale: {}, Messaggi totali: {}",
-                                           channelId, history.size());
-                            },
-                            error -> {
-                                logger.error("Errore durante la chiamata a OpenRouter - Canale: {}", channelId, error);
-                                event.getChannel().sendMessage("Oops! Qualcosa è andato storto.").queue();
-                            }
-                    );
+            // Mantiene l'indicatore "sta scrivendo..." attivo durante l'elaborazione della richiesta a OpenRouter
+            try (ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor()) {
+                ScheduledFuture<?> typingIndicator = executor.scheduleAtFixedRate(() -> {
+                    event.getChannel().sendTyping().queue();
+                }, 0, 2, TimeUnit.SECONDS);
+
+                openRouterService.getChatCompletion(history)
+                        .subscribe(
+                                botResponse -> {
+                                    logger.info("Risposta ricevuta da OpenRouter - Canale: {}, Lunghezza: {} caratteri",
+                                               channelId, botResponse.length());
+                                    sendLongMessage(event, botResponse);
+                                    history.add(Map.of("role", "assistant", "content", botResponse));
+                                    logger.debug("Risposta aggiunta alla cronologia - Canale: {}, Messaggi totali: {}",
+                                               channelId, history.size());
+                                },
+                                error -> {
+                                    logger.error("Errore durante la chiamata a OpenRouter - Canale: {}", channelId, error);
+                                    event.getChannel().sendMessage("Oops! Qualcosa è andato storto.").queue();
+                                },
+                                () -> {
+                                    // Ferma l'indicatore "sta scrivendo..." una volta completata l'elaborazione
+                                    typingIndicator.cancel(false);
+                                    executor.shutdown();
+                                }
+                        );
+            }catch (Exception e) {
+                logger.error("Errore nell'elaborazione del messaggio - Canale: {}", channelId, e);
+                event.getChannel().sendMessage("Oops! Qualcosa è andato storto durante l'elaborazione.").queue();
+            }
         }
     }
 
