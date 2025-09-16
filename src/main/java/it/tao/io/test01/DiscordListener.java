@@ -9,10 +9,14 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +29,9 @@ public class DiscordListener extends ListenerAdapter {
     private final ObjectMapper objectMapper;
     private Map<String, List<Map<String, String>>> conversationHistories = new ConcurrentHashMap<>();
 
-    private static final String HISTORY_FILE_PATH = "conversation_history.json";
+    @Value("${app.conversation.history.path}")
+    private String historyFilePath;
+
     private static final int MAX_CONTEXT_TOKENS = 120000;
     private static final int DISCORD_MESSAGE_LIMIT = 2000;
 
@@ -36,15 +42,25 @@ public class DiscordListener extends ListenerAdapter {
 
     @PostConstruct
     public void loadHistory() {
-        File historyFile = new File(HISTORY_FILE_PATH);
-        if (historyFile.exists()) {
-            try {
+        try {
+            // Crea la directory se non esiste
+            Path filePath = Paths.get(historyFilePath);
+            Path parentDir = filePath.getParent();
+            if (parentDir != null && !Files.exists(parentDir)) {
+                Files.createDirectories(parentDir);
+                System.out.println("Directory creata: " + parentDir);
+            }
+
+            File historyFile = new File(historyFilePath);
+            if (historyFile.exists()) {
                 // Legge la mappa dal file JSON se esiste
                 conversationHistories = objectMapper.readValue(historyFile, new TypeReference<ConcurrentHashMap<String, List<Map<String, String>>>>() {});
-                System.out.println("Cronologia conversazioni caricata da " + HISTORY_FILE_PATH);
-            } catch (IOException e) {
-                System.err.println("Impossibile caricare la cronologia delle conversazioni: " + e.getMessage());
+                System.out.println("Cronologia conversazioni caricata da " + historyFilePath);
+            } else {
+                System.out.println("File di cronologia non trovato, sarà creato al primo salvataggio: " + historyFilePath);
             }
+        } catch (IOException e) {
+            System.err.println("Impossibile caricare la cronologia delle conversazioni: " + e.getMessage());
         }
     }
 
@@ -52,8 +68,8 @@ public class DiscordListener extends ListenerAdapter {
     public void saveHistory() {
         try {
             // Salva la mappa corrente nel file JSON
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(HISTORY_FILE_PATH), conversationHistories);
-            System.out.println("Cronologia conversazioni salvata in " + HISTORY_FILE_PATH);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(historyFilePath), conversationHistories);
+            System.out.println("Cronologia conversazioni salvata in " + historyFilePath);
         } catch (IOException e) {
             System.err.println("Impossibile salvare la cronologia delle conversazioni: " + e.getMessage());
         }
