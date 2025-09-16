@@ -99,7 +99,6 @@ docker run -d \
 
 #### 4. Docker Compose (file di esempio)
 ```yaml
-version: '3.8'
 services:
   test01-tao:
     build: .
