@@ -1,11 +1,13 @@
 # test01_TAO.io
 
-Applicazione Spring Boot che integra un bot Discord con funzionalità di AI tramite OpenRouter. Il bot risponde ai messaggi su Discord utilizzando modelli di intelligenza artificiale configurabili tramite variabili d'ambiente. Include sistema di logging avanzato, backup automatici e persistenza delle conversazioni.
+Applicazione Spring Boot che integra un bot Discord con funzionalità di AI tramite OpenRouter. Il bot risponde ai messaggi su Discord utilizzando modelli di intelligenza artificiale configurabili tramite variabili d'ambiente. Include sistema di logging avanzato, backup automatici, persistenza delle conversazioni e gestione robusta degli errori di rete.
 
 ## Funzionalità principali
 - **Bot Discord intelligente**: Risponde quando menzionato direttamente o tramite ruoli
-- **Integrazione OpenRouter AI**: Supporto per modelli AI configurabili
+- **Integrazione OpenRouter AI**: Supporto per modelli AI configurabili con retry automatici
 - **Cronologia conversazioni**: Persistenza automatica delle conversazioni per canale
+- **Gestione errori di rete**: Retry automatici per problemi DNS e connettività
+- **Monitoraggio proattivo**: Sistema di health check per Discord, OpenRouter e DNS
 - **Logging dettagliato**: Sistema di log completo con rotazione automatica
 - **Backup automatici**: Backup periodici della cronologia con pulizia automatica
 - **Monitoring**: Endpoint Actuator per monitoraggio stato applicazione
@@ -19,6 +21,12 @@ Applicazione Spring Boot che integra un bot Discord con funzionalità di AI tram
 - Salvataggio automatico ogni 30 secondi
 - Backup con timestamp e pulizia file obsoleti
 
+### Sistema di Gestione Errori di Rete
+- **Discord**: Retry automatici OkHttp con timeout configurabili
+- **OpenRouter**: Retry con backoff esponenziale per errori DNS/timeout
+- **Monitoraggio proattivo**: NetworkHealthService controlla DNS, Discord e OpenRouter ogni 5 minuti
+- **Messaggi utente informativi**: Notifiche specifiche per tipo di errore
+
 ### Sistema di Logging
 - **Console**: Output formattato per sviluppo
 - **File principale**: Log completi con rotazione
@@ -29,6 +37,7 @@ Applicazione Spring Boot che integra un bot Discord con funzionalità di AI tram
 - Endpoint `/actuator/health` per controllo stato
 - Metriche applicazione tramite Spring Actuator
 - Log statistiche utilizzo (canali, messaggi, token)
+- Health check automatico della connettività di rete
 
 ## Configurazione
 
@@ -58,6 +67,20 @@ AUTO_SAVE_INTERVAL=30000
 BACKUP_ENABLED=true
 BACKUP_PATH=/app/data/backups
 BACKUP_MAX_FILES=10
+
+# Configurazioni per retry Discord
+DISCORD_RETRY_MAX_ATTEMPTS=3
+DISCORD_CONNECTION_TIMEOUT=30000
+DISCORD_READ_TIMEOUT=60000
+
+# Configurazioni per retry OpenRouter
+OPENROUTER_RETRY_MAX_ATTEMPTS=3
+OPENROUTER_RETRY_BASE_DELAY=1000
+
+# Monitoraggio stato rete
+NETWORK_HEALTH_CHECK_ENABLED=true
+NETWORK_HEALTH_CHECK_INTERVAL=300000
+NETWORK_HEALTH_CHECK_TIMEOUT=5000
 ```
 
 ## Avvio del progetto

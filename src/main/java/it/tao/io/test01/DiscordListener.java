@@ -327,7 +327,20 @@ public class DiscordListener extends ListenerAdapter {
                                 },
                                 error -> {
                                     logger.error("Errore durante la chiamata a OpenRouter - Canale: {}", channelId, error);
-                                    event.getChannel().sendMessage("Oops! Qualcosa è andato storto.").queue();
+
+                                    String userMessage;
+                                    if (error.getMessage() != null && error.getMessage().contains("temporaneamente non disponibile")) {
+                                        userMessage = "⚠️ Il servizio AI è temporaneamente non disponibile. Riprova tra qualche minuto.";
+                                        logger.warn("Servizio OpenRouter non disponibile dopo retry - Canale: {}", channelId);
+                                    } else if (error.getCause() != null && error.getCause().getMessage() != null &&
+                                              error.getCause().getMessage().contains("Failed to resolve")) {
+                                        userMessage = "🌐 Problema di connessione di rete. Riprova tra poco.";
+                                        logger.warn("Errore DNS per OpenRouter - Canale: {}", channelId);
+                                    } else {
+                                        userMessage = "🤖 Oops! Qualcosa è andato storto. Riprova tra poco.";
+                                    }
+
+                                    event.getChannel().sendMessage(userMessage).queue();
                                 },
                                 () -> {
                                     // Ferma l'indicatore "sta scrivendo..." una volta completata l'elaborazione
@@ -335,9 +348,9 @@ public class DiscordListener extends ListenerAdapter {
                                     executor.shutdown();
                                 }
                         );
-            }catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("Errore nell'elaborazione del messaggio - Canale: {}", channelId, e);
-                event.getChannel().sendMessage("Oops! Qualcosa è andato storto durante l'elaborazione.").queue();
+                event.getChannel().sendMessage("🤖 Errore durante l'elaborazione. Riprova tra poco.").queue();
             }
         }
     }

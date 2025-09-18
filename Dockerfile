@@ -9,6 +9,12 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
+# Installa tzdata e imposta il fuso orario Europe/Rome
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/Europe/Rome /etc/localtime && \
+    echo "Europe/Rome" > /etc/timezone && \
+    apk del tzdata
+
 # Crea le directory per i dati persistenti, log e backup
 RUN mkdir -p /app/data /app/logs /app/data/backups
 
@@ -26,6 +32,7 @@ ENV CONVERSATION_HISTORY_PATH=/app/data/conversation_history.json \
     LOG_FILE_PATH=/app/logs/test01-tao.log \
     BACKUP_PATH=/app/data/backups \
     AUTO_SAVE_ENABLED=true \
-    BACKUP_ENABLED=true
+    BACKUP_ENABLED=true \
+    TZ=Europe/Rome
 
 ENTRYPOINT ["java","-jar","app.jar"]

@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -23,13 +26,20 @@ public class OpenRouterService {
     @Value("${openrouter.model.name}")
     private String modelName;
 
+    @Value("${openrouter.retry.max-attempts:3}")
+    private int maxRetryAttempts;
+
+    @Value("${openrouter.retry.base-delay:1000}")
+    private long baseDelayMs;
+
     public OpenRouterService(WebClient.Builder webClientBuilder, @Value("${openrouter.api.key}") String openRouterApiKey) {
         this.webClient = webClientBuilder
                 .baseUrl("https://openrouter.ai/api/v1")
                 .defaultHeader("Authorization", "Bearer " + openRouterApiKey)
                 .build();
 
-        logger.info("OpenRouterService inizializzato con modello: {}", modelName);
+        logger.info("OpenRouterService inizializzato con modello: {}, retry max: {}, delay base: {}ms",
+                modelName, maxRetryAttempts, baseDelayMs);
     }
 
     // MODIFICATO: Accetta una lista di messaggi (la cronologia)
@@ -49,8 +59,45 @@ public class OpenRouterService {
                 .bodyValue(gson.toJson(requestBody))
                 .retrieve()
                 .bodyToMono(String.class)
+                .retryWhen(Retry.backoff(maxRetryAttempts, Duration.ofMillis(baseDelayMs))
+                        .filter(throwable -> {
+                            if (throwable instanceof WebClientRequestException ex) {
+                                // Retry per errori DNS e di connessione
+                                boolean shouldRetry = ex.getMessage().contains("Failed to resolve") ||
+                                        ex.getMessage().contains("Connection refused") ||
+                                        ex.getMessage().contains("timeout") ||
+                                        ex.getMessage().contains("No route to host");
+
+                                if (shouldRetry) {
+                                    logger.warn("Errore di rete rilevato, tentativo di retry: {}", ex.getMessage());
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })
+                        .doBeforeRetry(retrySignal -> {
+                            logger.info("Retry #{} per chiamata OpenRouter - Tentativo: {}",
+                                    retrySignal.totalRetries() + 1,
+                                    retrySignal.totalRetriesInARow() + 1);
+                        })
+                        .onRetryExhaustedThrow((retryBackoffSpec, retrySignal) -> {
+                            logger.error("Esauriti tutti i tentativi di retry ({}) per OpenRouter", maxRetryAttempts);
+                            return new RuntimeException("Servizio OpenRouter temporaneamente non disponibile dopo " +
+                                    maxRetryAttempts + " tentativi", retrySignal.failure());
+                        })
+                )
                 .doOnNext(response -> logger.debug("Risposta ricevuta da OpenRouter - Lunghezza: {} caratteri", response.length()))
-                .doOnError(error -> logger.error("Errore nella chiamata a OpenRouter", error))
+                .doOnError(error -> {
+                    if (error instanceof WebClientRequestException ex) {
+                        if (ex.getMessage().contains("Failed to resolve")) {
+                            logger.error("Errore DNS permanente per openrouter.ai - Verificare connessione internet", error);
+                        } else {
+                            logger.error("Errore di rete nella chiamata a OpenRouter", error);
+                        }
+                    } else {
+                        logger.error("Errore nella chiamata a OpenRouter", error);
+                    }
+                })
                 .map(this::extractContentFromResponse);
     }
 
@@ -64,7 +111,7 @@ public class OpenRouterService {
                 return "Nessuna risposta ricevuta dal modello.";
             }
 
-            Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+            Map<String, Object> message = (Map<String, Object>) choices.getFirst().get("message");
             String content = (String) message.get("content");
 
             logger.debug("Contenuto estratto dalla risposta - Lunghezza: {} caratteri", content.length());
