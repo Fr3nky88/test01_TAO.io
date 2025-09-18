@@ -1,250 +1,295 @@
-# test01_TAO.io
+# TAO Discord Bot
 
-Applicazione Spring Boot che integra un bot Discord con funzionalità di AI tramite OpenRouter. Il bot risponde ai messaggi su Discord utilizzando modelli di intelligenza artificiale configurabili tramite variabili d'ambiente. Include sistema di logging avanzato, backup automatici, persistenza delle conversazioni e gestione robusta degli errori di rete.
+Un bot Discord intelligente che utilizza AI per conversazioni naturali, implementato con architettura a layer seguendo le best practices Java enterprise.
 
-## Funzionalità principali
-- **Bot Discord intelligente**: Risponde quando menzionato direttamente o tramite ruoli
-- **Integrazione OpenRouter AI**: Supporto per modelli AI configurabili con retry automatici
-- **Cronologia conversazioni**: Persistenza automatica delle conversazioni per canale
-- **Gestione errori di rete**: Retry automatici per problemi DNS e connettività
-- **Monitoraggio proattivo**: Sistema di health check per Discord, OpenRouter e DNS
-- **Logging dettagliato**: Sistema di log completo con rotazione automatica
-- **Backup automatici**: Backup periodici della cronologia con pulizia automatica
-- **Monitoring**: Endpoint Actuator per monitoraggio stato applicazione
-- **Deploy Docker**: Containerizzazione completa con volumi persistenti
+## 🚀 Caratteristiche
 
-## Architettura e Componenti
+- **Conversazioni AI** tramite OpenRouter
+- **Persistenza MongoDB** in tempo reale
+- **Architettura Clean** a layer (Domain-Driven Design)
+- **Gestione messaggi lunghi** con suddivisione automatica
+- **Retry intelligente** per chiamate API
+- **Logging strutturato** con MDC
+- **Configurazione flessibile** tramite variabili d'ambiente
 
-### Gestione Conversazioni
-- Cronologia separata per ogni canale Discord
-- Gestione automatica del limite di token (120k)
-- Salvataggio automatico ogni 30 secondi
-- Backup con timestamp e pulizia file obsoleti
+## 🏗️ Architettura
 
-### Sistema di Gestione Errori di Rete
-- **Discord**: Retry automatici OkHttp con timeout configurabili
-- **OpenRouter**: Retry con backoff esponenziale per errori DNS/timeout
-- **Monitoraggio proattivo**: NetworkHealthService controlla DNS, Discord e OpenRouter ogni 5 minuti
-- **Messaggi utente informativi**: Notifiche specifiche per tipo di errore
+Il progetto segue i principi di **Clean Architecture** e **Domain-Driven Design** con separazione in layer:
 
-### Sistema di Logging
-- **Console**: Output formattato per sviluppo
-- **File principale**: Log completi con rotazione
-- **File errori**: Log separato per errori e eccezioni
-- **Livelli configurabili**: DEBUG per il codice applicativo, WARN per librerie
-
-### Monitoring
-- Endpoint `/actuator/health` per controllo stato
-- Metriche applicazione tramite Spring Actuator
-- Log statistiche utilizzo (canali, messaggi, token)
-- Health check automatico della connettività di rete
-
-## Configurazione
-
-### Variabili d'ambiente principali
-```bash
-# Obbligatorie
-DISCORD_BOT_TOKEN=your_discord_bot_token
-OPENROUTER_API_KEY=your_openrouter_api_key
-
-# Opzionali con valori di default
-OPENROUTER_MODEL_NAME=deepseek/deepseek-chat-v3.1:free
-SPRING_APPLICATION_NAME=test01
-CONVERSATION_HISTORY_PATH=/app/data/conversation_history.json
-LOG_FILE_PATH=/app/logs/test01-tao.log
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Presentation Layer                       │
+│  ├── listener/DiscordMessageListener.java                  │
+│  └── Gestione eventi Discord e interfaccia utente          │
+├─────────────────────────────────────────────────────────────┤
+│                    Application Layer                        │
+│  ├── service/ChatBotApplicationService.java                │
+│  └── Orchestrazione use case e coordinamento layer         │
+├─────────────────────────────────────────────────────────────┤
+│                     Domain Layer                            │
+│  ├── model/ConversationMessage.java                        │
+│  ├── repository/ConversationMessageRepository.java         │
+│  ├── service/ConversationDomainService.java                │
+│  └── Logica di business e regole del dominio               │
+├─────────────────────────────────────────────────────────────┤
+│                  Infrastructure Layer                       │
+│  ├── client/OpenRouterClient.java                          │
+│  ├── repository/MongoConversationMessageRepository.java    │
+│  ├── repository/ConversationMessageRepositoryAdapter.java  │
+│  └── Integrazione servizi esterni e persistenza           │
+├─────────────────────────────────────────────────────────────┤
+│                   Configuration Layer                       │
+│  ├── JdaConfiguration.java                                 │
+│  ├── WebClientConfiguration.java                           │
+│  └── AppProperties.java                                    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Configurazioni avanzate
+### Flusso delle Dipendenze
+
+```
+Presentation → Application → Domain ← Infrastructure
+                                ↑
+                         Configuration
+```
+
+## 🛠️ Tecnologie
+
+- **Java 17+**
+- **Spring Boot 3.x**
+- **Spring WebFlux** (Reactive)
+- **MongoDB** (Reactive)
+- **Discord JDA**
+- **OpenRouter AI API**
+- **Gson** per JSON parsing
+- **SLF4J + Logback** per logging
+
+## 📋 Prerequisiti
+
+- Java 17 o superiore
+- MongoDB in esecuzione
+- Token Discord Bot
+- API Key OpenRouter
+
+## 🔧 Configurazione
+
+### 1. Variabili d'Ambiente
+
+Crea un file `.env` o imposta le seguenti variabili:
+
 ```bash
-# Logging
+# Discord Bot Configuration
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
+
+# OpenRouter AI Configuration
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+OPENROUTER_MODEL_NAME=deepseek/deepseek-chat-v3.1:free
+
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/test01_tao
+MONGO_ENABLED=true
+
+# Logging Configuration
+LOG_FILE_PATH=./logs/test01-tao.log
 LOG_FILE_MAX_SIZE=10MB
 LOG_FILE_MAX_HISTORY=30
-LOG_FILE_TOTAL_SIZE=100MB
-
-# Backup e salvataggio
-AUTO_SAVE_ENABLED=true
-AUTO_SAVE_INTERVAL=30000
-BACKUP_ENABLED=true
-BACKUP_PATH=/app/data/backups
-BACKUP_MAX_FILES=10
-
-# Configurazioni per retry Discord
-DISCORD_RETRY_MAX_ATTEMPTS=3
-DISCORD_CONNECTION_TIMEOUT=30000
-DISCORD_READ_TIMEOUT=60000
-
-# Configurazioni per retry OpenRouter
-OPENROUTER_RETRY_MAX_ATTEMPTS=3
-OPENROUTER_RETRY_BASE_DELAY=1000
-
-# Monitoraggio stato rete
-NETWORK_HEALTH_CHECK_ENABLED=true
-NETWORK_HEALTH_CHECK_INTERVAL=300000
-NETWORK_HEALTH_CHECK_TIMEOUT=5000
 ```
 
-## Avvio del progetto
+### 2. Configurazione MongoDB
 
-### Con Docker (Raccomandato)
+Assicurati che MongoDB sia in esecuzione:
 
-#### 1. Costruzione dell'immagine
 ```bash
-docker build -t test01-tao .
+# Docker
+docker run -d -p 27017:27017 --name mongodb mongo:latest
+
+# Locale
+mongod --dbpath /path/to/data
 ```
 
-#### 2. Avvio con configurazione base
+### 3. Configurazione Discord Bot
+
+1. Vai su [Discord Developer Portal](https://discord.com/developers/applications)
+2. Crea una nuova applicazione
+3. Vai su "Bot" e crea un bot
+4. Copia il token e impostalo in `DISCORD_BOT_TOKEN`
+5. Abilita i seguenti **Privileged Gateway Intents**:
+   - Message Content Intent
+6. Invita il bot al server con le autorizzazioni:
+   - Read Messages
+   - Send Messages
+   - Read Message History
+
+## 🚀 Avvio
+
+### Sviluppo
+
 ```bash
-docker run -d \
-  --name test01-tao \
-  -e DISCORD_BOT_TOKEN=your_token \
-  -e OPENROUTER_API_KEY=your_openrouter_key \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/logs:/app/logs \
-  -p 8080:8080 \
-  test01-tao
-```
+# Clona il repository
+git clone <repository-url>
+cd test01_TAO.io
 
-#### 3. Avvio con configurazione completa
-```bash
-docker run -d \
-  --name test01-tao \
-  -e DISCORD_BOT_TOKEN=your_token \
-  -e OPENROUTER_API_KEY=your_openrouter_key \
-  -e OPENROUTER_MODEL_NAME=deepseek/deepseek-chat-v3.1:free \
-  -e LOG_FILE_MAX_SIZE=20MB \
-  -e BACKUP_MAX_FILES=15 \
-  -e AUTO_SAVE_INTERVAL=60000 \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/logs:/app/logs \
-  -p 8080:8080 \
-  test01-tao
-```
-
-#### 4. Docker Compose (file di esempio)
-```yaml
-services:
-  test01-tao:
-    build: .
-    environment:
-      - DISCORD_BOT_TOKEN=your_token
-      - OPENROUTER_API_KEY=your_openrouter_key
-      - OPENROUTER_MODEL_NAME=deepseek/deepseek-chat-v3.1:free
-      - AUTO_SAVE_INTERVAL=30000
-      - BACKUP_ENABLED=true
-    volumes:
-      - ./data:/app/data
-      - ./logs:/app/logs
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-```
-
-### Sviluppo locale
-
-#### Prerequisiti
-- Java 21+
-- Maven 3.6+
-
-#### Avvio
-```bash
 # Imposta le variabili d'ambiente
-export DISCORD_BOT_TOKEN=your_token
-export OPENROUTER_API_KEY=your_openrouter_key
+cp .env.example .env
+# Modifica .env con i tuoi valori
 
-# Esegui l'applicazione
-mvn spring-boot:run
+# Avvia l'applicazione
+./mvnw spring-boot:run
 ```
 
-## Struttura dei file
+### Produzione
 
-```
-/app/
-├── data/                           # Dati persistenti
-│   ├── conversation_history.json   # Cronologia conversazioni
-│   └── backups/                    # Backup automatici
-│       ├── conversation_history_20240917_143022.json
-│       └── ...
-├── logs/                           # File di log
-│   ├── test01-tao.log             # Log principale
-│   ├── test01-tao-errors.log      # Log errori
-│   └── archived/                   # Log archiviati
-└── app.jar                         # Applicazione
+```bash
+# Build dell'applicazione
+./mvnw clean package
+
+# Avvia con Java
+java -jar target/test01-tao-*.jar
 ```
 
-## Uso del Bot
+### Docker
 
-### Attivazione
-Il bot risponde quando viene:
-- **Menzionato direttamente**: `@NomeBot ciao come stai?`
-- **Menzionato tramite ruolo**: Se il bot ha un ruolo che viene menzionato
+```bash
+# Build dell'immagine
+docker build -t tao-discord-bot .
+
+# Avvia il container
+docker run -d --name tao-bot \
+  -e DISCORD_BOT_TOKEN=your_token \
+  -e OPENROUTER_API_KEY=your_key \
+  -e MONGODB_URI=mongodb://host.docker.internal:27017/test01_tao \
+  tao-discord-bot
+```
+
+## 📖 Utilizzo
+
+### Comandi Discord
+
+Il bot risponde quando viene **menzionato** in un canale:
+
+```
+@TaoBot Ciao, come stai?
+@TaoBot Spiegami la fisica quantistica
+@TaoBot Aiutami con questo codice Python
+```
 
 ### Funzionalità
-- **Conversazioni contestuali**: Mantiene la cronologia per canale
-- **Messaggi lunghi**: Divisione automatica dei messaggi oltre 2000 caratteri
-- **Gestione errori**: Messaggi di errore user-friendly
-- **Typing indicator**: Mostra quando il bot sta elaborando
 
-## Monitoring e Manutenzione
+- **Conversazioni contestuali**: Il bot mantiene la cronologia per canale
+- **Messaggi lunghi**: Gestione automatica di risposte oltre 2000 caratteri
+- **Gestione errori**: Retry automatico e messaggi di errore user-friendly
+- **Persistenza**: Tutte le conversazioni sono salvate su MongoDB
 
-### Endpoint di monitoraggio
+## 🔍 Monitoring
+
+### Health Check
+
 ```bash
-# Stato applicazione
 curl http://localhost:8080/actuator/health
+```
 
-# Informazioni applicazione  
-curl http://localhost:8080/actuator/info
+### Metrics
 
-# Metriche
+```bash
 curl http://localhost:8080/actuator/metrics
 ```
 
-### Log analysis
+### Logs
+
+I log sono disponibili in:
+- **Console**: Output strutturato per sviluppo
+- **File**: `./logs/test01-tao.log` con rotazione automatica
+
+## 🧪 Testing
+
 ```bash
-# Visualizza log in tempo reale
-docker logs -f test01-tao
+# Unit tests
+./mvnw test
 
-# Solo errori
-docker exec test01-tao tail -f /app/logs/test01-tao-errors.log
+# Integration tests
+./mvnw verify
 
-# Statistiche conversazioni
-docker exec test01-tao grep "Statistiche salvataggio" /app/logs/test01-tao.log
+# Test con profilo specifico
+./mvnw test -Dspring.profiles.active=test
 ```
 
-### Backup management
-```bash
-# Lista backup disponibili
-docker exec test01-tao ls -la /app/data/backups/
+## 🔧 Configurazioni Avanzate
 
-# Ripristino da backup
-docker exec test01-tao cp /app/data/backups/conversation_history_TIMESTAMP.json /app/data/conversation_history.json
+### Tuning OpenRouter
+
+```properties
+# Retry configuration
+openrouter.retry.max-attempts=3
+openrouter.retry.base-delay=1000
+
+# Model selection
+openrouter.model.name=deepseek/deepseek-chat-v3.1:free
 ```
 
-## Risoluzione problemi
+### Tuning Discord
 
-### Bot non risponde
-1. Verifica che il bot sia online su Discord
-2. Controlla i log: `docker logs test01-tao`
-3. Verifica le menzioni: il bot deve essere menzionato esplicitamente
-4. Controlla i permessi del bot nel canale
+```properties
+# Connection tuning
+discord.retry.max-attempts=3
+discord.connection.timeout=30000
+discord.read.timeout=60000
+```
 
-### Errori API OpenRouter
-1. Verifica la validità della chiave API
-2. Controlla il modello specificato
-3. Monitora i log errori per dettagli specifici
+### Tuning MongoDB
 
-### Problemi di persistenza
-1. Verifica che i volumi Docker siano montati correttamente
-2. Controlla i permessi delle directory
-3. Verifica lo spazio disco disponibile
+```properties
+# Connection pool
+spring.data.mongodb.option.max-connection-pool-size=20
+spring.data.mongodb.option.min-connection-pool-size=5
+```
 
-## Contribuire
+## 📊 Performance
+
+### Limiti
+
+- **Token Context**: 120,000 token massimi per conversazione
+- **Message Length**: 2000 caratteri per messaggio Discord
+- **Rate Limiting**: Gestito automaticamente da JDA e OpenRouter
+
+### Ottimizzazioni
+
+- **Reactive Streams**: Non-blocking I/O per scalabilità
+- **Connection Pooling**: Riutilizzo connessioni MongoDB e HTTP
+- **Memory Management**: Gestione automatica memoria conversazioni
+
+## 🤝 Contribuire
 
 1. Fork del repository
-2. Crea un branch per la feature
-3. Implementa le modifiche
-4. Aggiungi test se necessario
+2. Crea un branch feature (`git checkout -b feature/nuova-funzionalita`)
+3. Commit delle modifiche (`git commit -am 'Aggiunge nuova funzionalità'`)
+4. Push del branch (`git push origin feature/nuova-funzionalita`)
 5. Crea una Pull Request
 
-## Licenza
+## 📄 Licenza
 
-Questo progetto è distribuito sotto licenza MIT.
+Questo progetto è sotto licenza MIT. Vedi il file `LICENSE` per dettagli.
+
+## 🆘 Supporto
+
+- **Issues**: [GitHub Issues](../../issues)
+- **Documentation**: [Wiki](../../wiki)
+- **Discord**: [Support Server](link-to-discord)
+
+## 📝 Changelog
+
+### v2.0.0 - 2025-09-19
+- ✨ **Nuova architettura a layer** (Clean Architecture)
+- ✨ **Domain-Driven Design** implementation
+- ✨ **Reactive MongoDB** integration
+- 🔧 **Migliorata gestione errori**
+- 🔧 **Logging strutturato** con MDC
+- 🚀 **Performance** ottimizzate
+
+### v1.0.0 - Initial Release
+- ✨ Bot Discord base
+- ✨ Integrazione OpenRouter
+- ✨ Persistenza file (deprecated)
+
+---
+
+**Sviluppato con ❤️ per la community Discord**
