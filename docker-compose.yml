@@ -1,0 +1,33 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test01-tao-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - tao-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: test01-tao-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - tao-network
+
+networks:
+  tao-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

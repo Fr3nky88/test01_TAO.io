@@ -1,12 +1,11 @@
 package it.tao.io.test01.domain.service;
 
 import it.tao.io.test01.domain.model.ConversationMessage;
-import it.tao.io.test01.domain.repository.ConversationMessageRepository;
+import it.tao.io.test01.infrastructure.client.dto.OpenRouterMessage;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Domain Service per la gestione della logica di business delle conversazioni
@@ -26,12 +25,12 @@ public interface ConversationDomainService {
     /**
      * Converte i messaggi in formato compatibile con OpenRouter
      */
-    List<Map<String, String>> convertToOpenRouterFormat(List<ConversationMessage> messages);
+    List<OpenRouterMessage> convertToOpenRouterFormat(List<ConversationMessage> messages);
 
     /**
      * Gestisce il limite di token rimuovendo i messaggi più vecchi se necessario
      */
-    List<Map<String, String>> manageTokenLimit(List<Map<String, String>> messages, int maxTokens);
+    List<OpenRouterMessage> manageTokenLimit(List<OpenRouterMessage> messages, int maxTokens);
 
     /**
      * Cancella la cronologia di un canale

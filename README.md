@@ -1,42 +1,42 @@
 # TAO Discord Bot
 
-Un bot Discord intelligente che utilizza AI per conversazioni naturali, implementato con architettura a layer seguendo le best practices Java enterprise.
+An intelligent Discord bot that uses AI for natural conversations, implemented with a layered architecture following Java enterprise best practices.
 
-## 🚀 Caratteristiche
+## 🚀 Features
 
-- **Conversazioni AI** tramite OpenRouter
-- **Persistenza MongoDB** in tempo reale
-- **Architettura Clean** a layer (Domain-Driven Design)
-- **Gestione messaggi lunghi** con suddivisione automatica
-- **Retry intelligente** per chiamate API
-- **Logging strutturato** con MDC
-- **Configurazione flessibile** tramite variabili d'ambiente
+- **AI Conversations** via OpenRouter
+- **Real-time MongoDB Persistence**
+- **Clean Architecture** with layers (Domain-Driven Design)
+- **Long Message Handling** with automatic splitting
+- **Smart Retry** for API calls
+- **Structured Logging** with MDC
+- **Flexible Configuration** via environment variables
 
-## 🏗️ Architettura
+## 🏗️ Architecture
 
-Il progetto segue i principi di **Clean Architecture** e **Domain-Driven Design** con separazione in layer:
+The project follows the principles of **Clean Architecture** and **Domain-Driven Design** with a clear separation into layers:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Presentation Layer                       │
 │  ├── listener/DiscordMessageListener.java                  │
-│  └── Gestione eventi Discord e interfaccia utente          │
+│  └── Handles Discord events and user interface             │
 ├─────────────────────────────────────────────────────────────┤
 │                    Application Layer                        │
 │  ├── service/ChatBotApplicationService.java                │
-│  └── Orchestrazione use case e coordinamento layer         │
+│  └── Orchestrates use cases and coordinates layers         │
 ├─────────────────────────────────────────────────────────────┤
 │                     Domain Layer                            │
 │  ├── model/ConversationMessage.java                        │
 │  ├── repository/ConversationMessageRepository.java         │
 │  ├── service/ConversationDomainService.java                │
-│  └── Logica di business e regole del dominio               │
+│  └── Contains business logic and domain rules              │
 ├─────────────────────────────────────────────────────────────┤
 │                  Infrastructure Layer                       │
 │  ├── client/OpenRouterClient.java                          │
 │  ├── repository/MongoConversationMessageRepository.java    │
 │  ├── repository/ConversationMessageRepositoryAdapter.java  │
-│  └── Integrazione servizi esterni e persistenza           │
+│  └── Integrates with external services and handles persistence │
 ├─────────────────────────────────────────────────────────────┤
 │                   Configuration Layer                       │
 │  ├── JdaConfiguration.java                                 │
@@ -45,7 +45,7 @@ Il progetto segue i principi di **Clean Architecture** e **Domain-Driven Design*
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Flusso delle Dipendenze
+### Dependency Flow
 
 ```
 Presentation → Application → Domain ← Infrastructure
@@ -53,7 +53,7 @@ Presentation → Application → Domain ← Infrastructure
                          Configuration
 ```
 
-## 🛠️ Tecnologie
+## 🛠️ Technologies
 
 - **Java 17+**
 - **Spring Boot 3.x**
@@ -61,21 +61,21 @@ Presentation → Application → Domain ← Infrastructure
 - **MongoDB** (Reactive)
 - **Discord JDA**
 - **OpenRouter AI API**
-- **Gson** per JSON parsing
-- **SLF4J + Logback** per logging
+- **Gson** for JSON parsing
+- **SLF4J + Logback** for logging
 
-## 📋 Prerequisiti
+## 📋 Prerequisites
 
-- Java 17 o superiore
-- MongoDB in esecuzione
-- Token Discord Bot
-- API Key OpenRouter
+- Java 17 or higher
+- Docker and Docker Compose
+- Discord Bot Token
+- OpenRouter API Key
 
-## 🔧 Configurazione
+## 🔧 Configuration
 
-### 1. Variabili d'Ambiente
+### 1. Environment Variables
 
-Crea un file `.env` o imposta le seguenti variabili:
+Create a `.env` file in the root of the project with the following content:
 
 ```bash
 # Discord Bot Configuration
@@ -86,7 +86,7 @@ OPENROUTER_API_KEY=your_openrouter_api_key_here
 OPENROUTER_MODEL_NAME=deepseek/deepseek-chat-v3.1:free
 
 # MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/test01_tao
+MONGODB_URI=mongodb://mongodb:27017/test01_tao
 MONGO_ENABLED=true
 
 # Logging Configuration
@@ -95,90 +95,81 @@ LOG_FILE_MAX_SIZE=10MB
 LOG_FILE_MAX_HISTORY=30
 ```
 
-### 2. Configurazione MongoDB
+### 2. Docker Compose
 
-Assicurati che MongoDB sia in esecuzione:
+A `docker-compose.yml` file is provided to run the application and a MongoDB database.
 
-```bash
-# Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
+```yaml
+version: '3.8'
 
-# Locale
-mongod --dbpath /path/to/data
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: test01-tao-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - tao-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: test01-tao-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - tao-network
+
+networks:
+  tao-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
 ```
 
-### 3. Configurazione Discord Bot
+## 🚀 Running the Application
 
-1. Vai su [Discord Developer Portal](https://discord.com/developers/applications)
-2. Crea una nuova applicazione
-3. Vai su "Bot" e crea un bot
-4. Copia il token e impostalo in `DISCORD_BOT_TOKEN`
-5. Abilita i seguenti **Privileged Gateway Intents**:
-   - Message Content Intent
-6. Invita il bot al server con le autorizzazioni:
-   - Read Messages
-   - Send Messages
-   - Read Message History
+1.  **Build the project:**
+    ```bash
+    ./mvnw clean install
+    ```
 
-## 🚀 Avvio
+2.  **Run with Docker Compose:**
+    Make sure your `.env` file is configured correctly, then run:
+    ```bash
+    docker-compose up --build
+    ```
 
-### Sviluppo
+The bot will start, connect to Discord, and be ready to receive messages.
 
-```bash
-# Clona il repository
-git clone <repository-url>
-cd test01_TAO.io
+## 📖 Usage
 
-# Imposta le variabili d'ambiente
-cp .env.example .env
-# Modifica .env con i tuoi valori
+### Discord Commands
 
-# Avvia l'applicazione
-./mvnw spring-boot:run
-```
-
-### Produzione
-
-```bash
-# Build dell'applicazione
-./mvnw clean package
-
-# Avvia con Java
-java -jar target/test01-tao-*.jar
-```
-
-### Docker
-
-```bash
-# Build dell'immagine
-docker build -t tao-discord-bot .
-
-# Avvia il container
-docker run -d --name tao-bot \
-  -e DISCORD_BOT_TOKEN=your_token \
-  -e OPENROUTER_API_KEY=your_key \
-  -e MONGODB_URI=mongodb://host.docker.internal:27017/test01_tao \
-  tao-discord-bot
-```
-
-## 📖 Utilizzo
-
-### Comandi Discord
-
-Il bot risponde quando viene **menzionato** in un canale:
+The bot responds when mentioned in a channel:
 
 ```
-@TaoBot Ciao, come stai?
-@TaoBot Spiegami la fisica quantistica
-@TaoBot Aiutami con questo codice Python
+@TaoBot Hi, how are you?
+@TaoBot Explain quantum physics to me
+@TaoBot Help me with this Python code
 ```
 
-### Funzionalità
+### Features
 
-- **Conversazioni contestuali**: Il bot mantiene la cronologia per canale
-- **Messaggi lunghi**: Gestione automatica di risposte oltre 2000 caratteri
-- **Gestione errori**: Retry automatico e messaggi di errore user-friendly
-- **Persistenza**: Tutte le conversazioni sono salvate su MongoDB
+- **Contextual Conversations**: The bot maintains history per channel
+- **Long Messages**: Automatic handling of responses over 2000 characters
+- **Error Management**: Automatic retry and user-friendly error messages
+- **Persistence**: All conversations are saved to MongoDB
 
 ## 🔍 Monitoring
 
@@ -196,9 +187,9 @@ curl http://localhost:8080/actuator/metrics
 
 ### Logs
 
-I log sono disponibili in:
-- **Console**: Output strutturato per sviluppo
-- **File**: `./logs/test01-tao.log` con rotazione automatica
+Logs are available in:
+- **Console**: Structured output for development
+- **File**: `./logs/test01-tao.log` with automatic rotation
 
 ## 🧪 Testing
 
@@ -209,11 +200,11 @@ I log sono disponibili in:
 # Integration tests
 ./mvnw verify
 
-# Test con profilo specifico
+# Test with specific profile
 ./mvnw test -Dspring.profiles.active=test
 ```
 
-## 🔧 Configurazioni Avanzate
+## 🔧 Advanced Configurations
 
 ### Tuning OpenRouter
 
@@ -245,31 +236,31 @@ spring.data.mongodb.option.min-connection-pool-size=5
 
 ## 📊 Performance
 
-### Limiti
+### Limits
 
-- **Token Context**: 120,000 token massimi per conversazione
-- **Message Length**: 2000 caratteri per messaggio Discord
-- **Rate Limiting**: Gestito automaticamente da JDA e OpenRouter
+- **Token Context**: 120,000 max tokens per conversation
+- **Message Length**: 2000 characters per Discord message
+- **Rate Limiting**: Automatically managed by JDA and OpenRouter
 
-### Ottimizzazioni
+### Optimizations
 
-- **Reactive Streams**: Non-blocking I/O per scalabilità
-- **Connection Pooling**: Riutilizzo connessioni MongoDB e HTTP
-- **Memory Management**: Gestione automatica memoria conversazioni
+- **Reactive Streams**: Non-blocking I/O for scalability
+- **Connection Pooling**: Reuse MongoDB and HTTP connections
+- **Memory Management**: Automatic memory management for conversations
 
-## 🤝 Contribuire
+## 🤝 Contributing
 
-1. Fork del repository
-2. Crea un branch feature (`git checkout -b feature/nuova-funzionalita`)
-3. Commit delle modifiche (`git commit -am 'Aggiunge nuova funzionalità'`)
-4. Push del branch (`git push origin feature/nuova-funzionalita`)
-5. Crea una Pull Request
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push the branch (`git push origin feature/new-feature`)
+5. Create a Pull Request
 
-## 📄 Licenza
+## 📄 License
 
-Questo progetto è sotto licenza MIT. Vedi il file `LICENSE` per dettagli.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-## 🆘 Supporto
+## 🆘 Support
 
 - **Issues**: [GitHub Issues](../../issues)
 - **Documentation**: [Wiki](../../wiki)
@@ -278,18 +269,18 @@ Questo progetto è sotto licenza MIT. Vedi il file `LICENSE` per dettagli.
 ## 📝 Changelog
 
 ### v2.0.0 - 2025-09-19
-- ✨ **Nuova architettura a layer** (Clean Architecture)
+- ✨ **New layered architecture** (Clean Architecture)
 - ✨ **Domain-Driven Design** implementation
 - ✨ **Reactive MongoDB** integration
-- 🔧 **Migliorata gestione errori**
-- 🔧 **Logging strutturato** con MDC
-- 🚀 **Performance** ottimizzate
+- 🔧 **Improved error handling**
+- 🔧 **Structured logging** with MDC
+- 🚀 **Optimized performance**
 
 ### v1.0.0 - Initial Release
-- ✨ Bot Discord base
-- ✨ Integrazione OpenRouter
-- ✨ Persistenza file (deprecated)
+- ✨ Basic Discord bot
+- ✨ OpenRouter integration
+- ✨ File persistence (deprecated)
 
 ---
 
-**Sviluppato con ❤️ per la community Discord**
+**Developed with ❤️ for the Discord community**

@@ -7,23 +7,14 @@ import reactor.core.publisher.Mono;
 /**
  * Repository interface per la gestione dei messaggi di conversazione
  * Definisce il contratto per la persistenza, implementato nell'infrastructure layer
+ * I metodi base (save, findAll, ecc.) sono forniti da ReactiveMongoRepository
  */
 public interface ConversationMessageRepository {
-
-    /**
-     * Salva un messaggio di conversazione
-     */
-    Mono<ConversationMessage> save(ConversationMessage message);
 
     /**
      * Trova tutti i messaggi per un canale specifico, ordinati per timestamp
      */
     Flux<ConversationMessage> findByChannelIdOrderByTimestamp(String channelId);
-
-    /**
-     * Trova tutti i messaggi
-     */
-    Flux<ConversationMessage> findAll();
 
     /**
      * Elimina tutti i messaggi di un canale specifico

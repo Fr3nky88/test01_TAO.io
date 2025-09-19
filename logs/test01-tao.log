@@ -1,0 +1,430 @@
+2025-09-20 00:00:44.363 [main] [] INFO  it.tao.io.test01.Test01Application - Starting Test01Application using Java 21.0.7 with PID 23192 (C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes started by Fchec in C:\Users\Fchec\Dev\My projects\test01_TAO.io)
+2025-09-20 00:00:44.377 [main] [] DEBUG it.tao.io.test01.Test01Application - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-20 00:00:44.378 [main] [] INFO  it.tao.io.test01.Test01Application - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 00:00:45.509 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-09-20 00:00:45.665 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 143 ms. Found 1 Reactive MongoDB repository interface.
+2025-09-20 00:00:46.415 [main] [] WARN  o.s.b.w.r.c.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+2025-09-20 00:00:48.519 [main] [] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-20 00:00:48.537 [main] [] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:66)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at it.tao.io.test01.Test01Application.main(Test01Application.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 21 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 35 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reactiveMongoTemplate' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoTemplate' parameter 0: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoDatabaseFactory' parameter 0: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:546)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 49 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoDatabaseFactory' parameter 0: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:546)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1690)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 59 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 72 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:200)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiateWithFactoryMethod(SimpleInstantiationStrategy.java:89)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:169)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	... 86 common frames omitted
+Caused by: java.lang.IllegalArgumentException: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at com.mongodb.ConnectionString.validatePort(ConnectionString.java:1223)
+	at com.mongodb.ConnectionString.parseHosts(ConnectionString.java:1206)
+	at com.mongodb.ConnectionString.<init>(ConnectionString.java:420)
+	at com.mongodb.ConnectionString.<init>(ConnectionString.java:343)
+	at org.springframework.boot.autoconfigure.mongo.PropertiesMongoConnectionDetails.getConnectionString(PropertiesMongoConnectionDetails.java:56)
+	at org.springframework.boot.autoconfigure.mongo.StandardMongoClientSettingsBuilderCustomizer.customize(StandardMongoClientSettingsBuilderCustomizer.java:84)
+	at org.springframework.boot.autoconfigure.mongo.MongoClientFactorySupport.customize(MongoClientFactorySupport.java:55)
+	at org.springframework.boot.autoconfigure.mongo.MongoClientFactorySupport.createMongoClient(MongoClientFactorySupport.java:49)
+	at org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration.reactiveStreamsMongoClient(MongoReactiveAutoConfiguration.java:67)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:172)
+	... 89 common frames omitted
+2025-09-20 00:03:53.739 [main] [] INFO  it.tao.io.test01.Test01Application - Starting Test01Application using Java 21.0.7 with PID 32788 (C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes started by Fchec in C:\Users\Fchec\Dev\My projects\test01_TAO.io)
+2025-09-20 00:03:53.742 [main] [] DEBUG it.tao.io.test01.Test01Application - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-20 00:03:53.743 [main] [] INFO  it.tao.io.test01.Test01Application - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 00:03:54.767 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-09-20 00:03:54.920 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 145 ms. Found 1 Reactive MongoDB repository interface.
+2025-09-20 00:03:55.663 [main] [] WARN  o.s.b.w.r.c.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+2025-09-20 00:03:57.755 [main] [] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-20 00:03:57.781 [main] [] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:66)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at it.tao.io.test01.Test01Application.main(Test01Application.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 21 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 35 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reactiveMongoTemplate' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoTemplate' parameter 0: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoDatabaseFactory' parameter 0: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:546)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 49 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoDatabaseFactory' parameter 0: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:546)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1690)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 59 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reactiveStreamsMongoClient' defined in class path resource [org/springframework/boot/autoconfigure/mongo/MongoReactiveAutoConfiguration.class]: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 72 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.mongodb.reactivestreams.client.MongoClient]: Factory method 'reactiveStreamsMongoClient' threw exception with message: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:200)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiateWithFactoryMethod(SimpleInstantiationStrategy.java:89)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:169)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	... 86 common frames omitted
+Caused by: java.lang.IllegalArgumentException: The connection string contains an invalid host and port. The port contains non-digit characters, it must be an integer between 0 and 65535. Hint: username and password must be escaped according to RFC 3986.
+	at com.mongodb.ConnectionString.validatePort(ConnectionString.java:1223)
+	at com.mongodb.ConnectionString.parseHosts(ConnectionString.java:1206)
+	at com.mongodb.ConnectionString.<init>(ConnectionString.java:420)
+	at com.mongodb.ConnectionString.<init>(ConnectionString.java:343)
+	at org.springframework.boot.autoconfigure.mongo.PropertiesMongoConnectionDetails.getConnectionString(PropertiesMongoConnectionDetails.java:56)
+	at org.springframework.boot.autoconfigure.mongo.StandardMongoClientSettingsBuilderCustomizer.customize(StandardMongoClientSettingsBuilderCustomizer.java:84)
+	at org.springframework.boot.autoconfigure.mongo.MongoClientFactorySupport.customize(MongoClientFactorySupport.java:55)
+	at org.springframework.boot.autoconfigure.mongo.MongoClientFactorySupport.createMongoClient(MongoClientFactorySupport.java:49)
+	at org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration.reactiveStreamsMongoClient(MongoReactiveAutoConfiguration.java:67)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:172)
+	... 89 common frames omitted
+2025-09-20 00:06:42.110 [main] [] INFO  it.tao.io.test01.Test01Application - Starting Test01Application using Java 21.0.7 with PID 39052 (C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes started by Fchec in C:\Users\Fchec\Dev\My projects\test01_TAO.io)
+2025-09-20 00:06:42.112 [main] [] DEBUG it.tao.io.test01.Test01Application - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-20 00:06:42.113 [main] [] INFO  it.tao.io.test01.Test01Application - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 00:06:43.146 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-09-20 00:06:43.290 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 136 ms. Found 1 Reactive MongoDB repository interface.
+2025-09-20 00:06:44.120 [main] [] INFO  org.mongodb.driver.client - MongoClient with metadata {"driver": {"name": "mongo-java-driver|reactive-streams|spring-boot", "version": "5.5.1"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/21.0.7+6-LTS"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=NettyTransportSettings{eventLoopGroup=io.netty.channel.nio.NioEventLoopGroup@7a55fb81, socketChannelClass=null, allocator=null, sslContext=null}, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@49a38b1], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@5a3cf878, com.mongodb.Jep395RecordCodecProvider@1d2d8846, com.mongodb.KotlinCodecProvider@34cd65ac]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[databases.home:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@33d28f0a], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2025-09-20 00:06:44.126 [main] [] WARN  o.s.b.w.r.c.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+2025-09-20 00:06:46.338 [main] [] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-20 00:06:46.357 [main] [] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'chatBotApplicationService' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\application\service\ChatBotApplicationService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1188)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1123)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext.refresh(ReactiveWebServerApplicationContext.java:66)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at it.tao.io.test01.Test01Application.main(Test01Application.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'conversationDomainServiceImpl' defined in file [C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes\it\tao\io\test01\domain\service\ConversationDomainServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 21 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'mongoConversationMessageRepository' defined in it.tao.io.test01.infrastructure.repository.MongoConversationMessageRepository defined in @EnableReactiveMongoRepositories declared on MongoReactiveRepositoriesRegistrar.EnableReactiveMongoRepositoriesConfiguration: Cannot resolve reference to bean 'reactiveMongoTemplate' while setting bean property 'reactiveMongoOperations'
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:377)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:135)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1725)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1474)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1752)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 35 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'reactiveMongoTemplate' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Unsatisfied dependency expressed through method 'reactiveMongoTemplate' parameter 0: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Failed to instantiate [org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory]: Factory method 'reactiveMongoDatabaseFactory' threw exception with message: Database name must not be empty
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:546)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:365)
+	... 49 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reactiveMongoDatabaseFactory' defined in class path resource [org/springframework/boot/autoconfigure/data/mongo/MongoReactiveDataAutoConfiguration.class]: Failed to instantiate [org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory]: Factory method 'reactiveMongoDatabaseFactory' threw exception with message: Database name must not be empty
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1205)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1690)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1635)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	... 59 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory]: Factory method 'reactiveMongoDatabaseFactory' threw exception with message: Database name must not be empty
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:200)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiateWithFactoryMethod(SimpleInstantiationStrategy.java:89)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:169)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	... 72 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Database name must not be empty
+	at org.springframework.util.Assert.hasText(Assert.java:253)
+	at org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory.<init>(SimpleReactiveMongoDatabaseFactory.java:84)
+	at org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory.<init>(SimpleReactiveMongoDatabaseFactory.java:78)
+	at org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration.reactiveMongoDatabaseFactory(MongoReactiveDataAutoConfiguration.java:91)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:172)
+	... 75 common frames omitted
+2025-09-20 00:07:23.693 [main] [] INFO  it.tao.io.test01.Test01Application - Starting Test01Application using Java 21.0.7 with PID 39368 (C:\Users\Fchec\Dev\My projects\test01_TAO.io\target\classes started by Fchec in C:\Users\Fchec\Dev\My projects\test01_TAO.io)
+2025-09-20 00:07:23.694 [main] [] DEBUG it.tao.io.test01.Test01Application - Running with Spring Boot v3.5.5, Spring v6.2.10
+2025-09-20 00:07:23.695 [main] [] INFO  it.tao.io.test01.Test01Application - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 00:07:24.574 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-09-20 00:07:24.745 [main] [] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 155 ms. Found 1 Reactive MongoDB repository interface.
+2025-09-20 00:07:25.533 [main] [] INFO  org.mongodb.driver.client - MongoClient with metadata {"driver": {"name": "mongo-java-driver|reactive-streams|spring-boot", "version": "5.5.1"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Eclipse Adoptium/21.0.7+6-LTS"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=NettyTransportSettings{eventLoopGroup=io.netty.channel.nio.NioEventLoopGroup@7574d4ad, socketChannelClass=null, allocator=null, sslContext=null}, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@4ffced4e], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@7bede4ea, com.mongodb.Jep395RecordCodecProvider@713999c2, com.mongodb.KotlinCodecProvider@6060146b]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[databases.home:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@12abcd1e], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2025-09-20 00:07:25.644 [cluster-ClusterId{value='68cdd41d731e666c83ee9efe', description='null'}-databases.home:27017] [] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=databases.home:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=21, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=52863700, minRoundTripTimeNanos=0}
+2025-09-20 00:07:25.968 [main] [] INFO  i.t.i.t.i.client.OpenRouterClient - OpenRouterClient inizializzato con modello: null
+2025-09-20 00:07:26.029 [main] [] INFO  i.t.i.t.p.l.DiscordMessageListener - DiscordMessageListener inizializzato con architettura a layer
+2025-09-20 00:07:26.031 [main] [] INFO  i.t.i.test01.config.JdaConfiguration - Inizializzazione bot Discord...
+2025-09-20 00:07:27.507 [main] [] INFO  i.t.i.test01.config.JdaConfiguration - Bot Discord inizializzato con successo. Bot: testbot01_fra#5849
+2025-09-20 00:07:27.871 [main] [] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoints beneath base path '/actuator'
+2025-09-20 00:07:28.411 [main] [] INFO  o.s.b.w.e.netty.NettyWebServer - Netty started on port 8080 (http)
+2025-09-20 00:07:28.440 [main] [] INFO  it.tao.io.test01.Test01Application - Started Test01Application in 5.381 seconds (process running for 5.817)
+2025-09-20 00:07:28.459 [scheduling-1] [] DEBUG i.tao.io.test01.NetworkHealthService - Avvio controllo stato rete
+2025-09-20 00:07:28.543 [scheduling-1] [] DEBUG i.tao.io.test01.NetworkHealthService - 📊 Stato rete - DNS: ✅ (00:07:28), Discord: ✅ (00:07:28), OpenRouter: ✅ (00:07:28)
+2025-09-20 00:07:54.339 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio ricevuto - Canale: 1417636063148769340, Utente: frenkyx (481202097447108614), Contenuto: Ciao <@1416896636021637255>
+2025-09-20 00:07:54.339 [JDA MainWS-ReadThread] [1417636063148769340] INFO  i.t.i.t.p.l.DiscordMessageListener - Bot menzionato - Elaborazione messaggio per canale: 1417636063148769340, utente: frenkyx
+2025-09-20 00:07:54.342 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio pulito: Ciao
+2025-09-20 00:07:54.348 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.a.s.ChatBotApplicationService - Processamento messaggio per canale: 1417636063148769340
+2025-09-20 00:07:54.348 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Aggiunta messaggio: canale=1417636063148769340, ruolo=user, lunghezza=4
+2025-09-20 00:07:54.365 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Recupero cronologia per canale: 1417636063148769340
+2025-09-20 00:07:54.503 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Messaggio salvato con ID: 68cdd43a731e666c83ee9eff
+2025-09-20 00:07:54.570 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Cronologia recuperata per canale: 1417636063148769340
+2025-09-20 00:07:54.571 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.a.s.ChatBotApplicationService - Invio 1 messaggi a OpenRouter
+2025-09-20 00:07:54.571 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.i.client.OpenRouterClient - Invio richiesta a OpenRouter con 1 messaggi
+2025-09-20 00:07:58.778 [reactor-http-nio-3] [] DEBUG i.t.i.t.i.client.OpenRouterClient - Risposta ricevuta da OpenRouter: 34 caratteri
+2025-09-20 00:07:58.779 [reactor-http-nio-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Aggiunta messaggio: canale=1417636063148769340, ruolo=assistant, lunghezza=34
+2025-09-20 00:07:58.784 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Messaggio salvato con ID: 68cdd43e731e666c83ee9f00
+2025-09-20 00:07:58.784 [nioEventLoopGroup-3-3] [] INFO  i.t.i.t.a.s.ChatBotApplicationService - Risposta AI generata per canale: 1417636063148769340 (lunghezza: 34)
+2025-09-20 00:07:58.784 [nioEventLoopGroup-3-3] [] INFO  i.t.i.t.p.l.DiscordMessageListener - Risposta ricevuta per canale: 1417636063148769340, lunghezza: 34 caratteri
+2025-09-20 00:07:58.784 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.p.l.DiscordMessageListener - Invio messaggio lungo. Lunghezza: 34 caratteri
+2025-09-20 00:07:58.791 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio inviato direttamente (sotto il limite)
+2025-09-20 00:09:38.954 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio ricevuto - Canale: 1417636063148769340, Utente: frenkyx (481202097447108614), Contenuto: Ciao <@1416896636021637255> come stai?
+2025-09-20 00:09:38.954 [JDA MainWS-ReadThread] [1417636063148769340] INFO  i.t.i.t.p.l.DiscordMessageListener - Bot menzionato - Elaborazione messaggio per canale: 1417636063148769340, utente: frenkyx
+2025-09-20 00:09:38.954 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio pulito: Ciao  come stai?
+2025-09-20 00:09:38.955 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.a.s.ChatBotApplicationService - Processamento messaggio per canale: 1417636063148769340
+2025-09-20 00:09:38.955 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Aggiunta messaggio: canale=1417636063148769340, ruolo=user, lunghezza=16
+2025-09-20 00:09:38.960 [JDA MainWS-ReadThread] [1417636063148769340] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Recupero cronologia per canale: 1417636063148769340
+2025-09-20 00:09:38.965 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Messaggio salvato con ID: 68cdd4a2731e666c83ee9f01
+2025-09-20 00:09:38.971 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Cronologia recuperata per canale: 1417636063148769340
+2025-09-20 00:09:38.971 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.a.s.ChatBotApplicationService - Invio 3 messaggi a OpenRouter
+2025-09-20 00:09:38.971 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.i.client.OpenRouterClient - Invio richiesta a OpenRouter con 3 messaggi
+2025-09-20 00:09:42.979 [reactor-http-nio-3] [] DEBUG i.t.i.t.i.client.OpenRouterClient - Risposta ricevuta da OpenRouter: 74 caratteri
+2025-09-20 00:09:42.979 [reactor-http-nio-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Aggiunta messaggio: canale=1417636063148769340, ruolo=assistant, lunghezza=74
+2025-09-20 00:09:42.984 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.d.s.ConversationDomainServiceImpl - Messaggio salvato con ID: 68cdd4a6731e666c83ee9f02
+2025-09-20 00:09:42.984 [nioEventLoopGroup-3-3] [] INFO  i.t.i.t.a.s.ChatBotApplicationService - Risposta AI generata per canale: 1417636063148769340 (lunghezza: 74)
+2025-09-20 00:09:42.984 [nioEventLoopGroup-3-3] [] INFO  i.t.i.t.p.l.DiscordMessageListener - Risposta ricevuta per canale: 1417636063148769340, lunghezza: 74 caratteri
+2025-09-20 00:09:42.984 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.p.l.DiscordMessageListener - Invio messaggio lungo. Lunghezza: 74 caratteri
+2025-09-20 00:09:42.985 [nioEventLoopGroup-3-3] [] DEBUG i.t.i.t.p.l.DiscordMessageListener - Messaggio inviato direttamente (sotto il limite)
+2025-09-20 00:10:48.246 [SpringApplicationShutdownHook] [] INFO  o.s.b.w.e.netty.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-20 00:10:48.248 [netty-shutdown] [] INFO  o.s.b.w.e.netty.GracefulShutdown - Graceful shutdown complete

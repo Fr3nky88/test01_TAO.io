@@ -2,13 +2,13 @@ package it.tao.io.test01.application.service;
 
 import it.tao.io.test01.domain.service.ConversationDomainService;
 import it.tao.io.test01.infrastructure.client.OpenRouterClient;
+import it.tao.io.test01.infrastructure.client.dto.OpenRouterMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Application Service che orchestra i use case del bot Discord
@@ -38,7 +38,7 @@ public class ChatBotApplicationService {
             .then(conversationService.getConversationHistory(channelId).collectList())
             .map(messages -> {
                 // Converte i messaggi in formato OpenRouter
-                List<Map<String, String>> openRouterMessages =
+                List<OpenRouterMessage> openRouterMessages =
                     conversationService.convertToOpenRouterFormat(messages);
 
                 // Gestisce il limite di token

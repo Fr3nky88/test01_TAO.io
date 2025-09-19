@@ -1,24 +1,30 @@
 package it.tao.io.test01.infrastructure.repository;
 
 import it.tao.io.test01.domain.model.ConversationMessage;
-import it.tao.io.test01.domain.repository.ConversationMessageRepository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * Implementazione MongoDB del repository per i messaggi di conversazione
+ * Repository MongoDB per i messaggi di conversazione
+ * Spring Data crea automaticamente l'implementazione di questa interfaccia
  */
 @Repository
-public interface MongoConversationMessageRepository extends ReactiveMongoRepository<ConversationMessage, String>, ConversationMessageRepository {
+public interface MongoConversationMessageRepository extends ReactiveMongoRepository<ConversationMessage, String> {
 
-    @Override
+    /**
+     * Trova tutti i messaggi per un canale specifico, ordinati per timestamp
+     */
     Flux<ConversationMessage> findByChannelIdOrderByTimestamp(String channelId);
 
-    @Override
+    /**
+     * Elimina tutti i messaggi di un canale specifico
+     */
     Mono<Void> deleteByChannelId(String channelId);
 
-    @Override
+    /**
+     * Conta il numero di messaggi per un canale specifico
+     */
     Mono<Long> countByChannelId(String channelId);
 }

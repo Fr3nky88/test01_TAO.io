@@ -1,6 +1,8 @@
 package it.tao.io.test01.infrastructure.client;
 
-import com.google.gson.Gson;
+import it.tao.io.test01.infrastructure.client.dto.OpenRouterMessage;
+import it.tao.io.test01.infrastructure.client.dto.OpenRouterRequest;
+import it.tao.io.test01.infrastructure.client.dto.OpenRouterResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +15,6 @@ import reactor.util.retry.Retry;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Client per l'integrazione con il servizio OpenRouter AI
@@ -24,7 +25,6 @@ public class OpenRouterClient {
     private static final Logger logger = LoggerFactory.getLogger(OpenRouterClient.class);
 
     private final WebClient webClient;
-    private final Gson gson = new Gson();
 
     @Value("${openrouter.model.name}")
     private String modelName;
@@ -49,15 +49,15 @@ public class OpenRouterClient {
     /**
      * Invia una richiesta di chat completion a OpenRouter
      */
-    public Mono<String> getChatCompletion(List<Map<String, String>> messages) {
+    public Mono<String> getChatCompletion(List<OpenRouterMessage> messages) {
         logger.debug("Invio richiesta a OpenRouter con {} messaggi", messages.size());
 
-        var requestBody = Map.of(
-                "model", modelName,
-                "messages", messages,
-                "temperature", 0.7,
-                "max_tokens", 4000,
-                "stream", false
+        OpenRouterRequest requestBody = new OpenRouterRequest(
+                modelName,
+                messages,
+                0.7,
+                4000,
+                false
         );
 
         return webClient.post()
@@ -65,7 +65,7 @@ public class OpenRouterClient {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestBody)
                 .retrieve()
-                .bodyToString()
+                .bodyToMono(OpenRouterResponse.class)
                 .retryWhen(Retry.backoff(maxRetryAttempts, Duration.ofMillis(baseDelayMs))
                         .filter(this::isRetryableException)
                         .doBeforeRetry(retrySignal ->
@@ -86,24 +86,16 @@ public class OpenRouterClient {
                 throwable.getMessage().contains("connection"));
     }
 
-    private String extractContentFromResponse(String jsonResponse) {
+    private String extractContentFromResponse(OpenRouterResponse response) {
         try {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> response = gson.fromJson(jsonResponse, Map.class);
-
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
-
-            if (choices != null && !choices.isEmpty()) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-
-                if (message != null) {
-                    return (String) message.get("content");
+            if (response.getChoices() != null && !response.getChoices().isEmpty()) {
+                OpenRouterResponse.Choice firstChoice = response.getChoices().get(0);
+                if (firstChoice.getMessage() != null) {
+                    return firstChoice.getMessage().getContent();
                 }
             }
 
-            logger.warn("Formato risposta OpenRouter non valido: {}", jsonResponse);
+            logger.warn("Formato risposta OpenRouter non valido: {}", response);
             return "Risposta non valida dal servizio AI.";
 
         } catch (Exception e) {
