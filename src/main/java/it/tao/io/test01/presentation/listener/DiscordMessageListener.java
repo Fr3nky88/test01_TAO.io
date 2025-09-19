@@ -87,6 +87,7 @@ public class DiscordMessageListener extends ListenerAdapter {
         return isMentioned;
     }
 
+    @SuppressWarnings("resource")
     private void processMessage(MessageReceivedEvent event, String channelId) {
         // Mostra l'indicatore "sta scrivendo..." nel canale
         event.getChannel().sendTyping().queue();
@@ -102,32 +103,30 @@ public class DiscordMessageListener extends ListenerAdapter {
         logger.debug("Messaggio pulito: {}", cleanMessage);
 
         // Mantiene l'indicatore "sta scrivendo..." attivo durante l'elaborazione
-        try (ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor()) {
-            ScheduledFuture<?> typingIndicator = executor.scheduleAtFixedRate(() ->
-                event.getChannel().sendTyping().queue(), 0, 2, TimeUnit.SECONDS);
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        ScheduledFuture<?> typingIndicator = executor.scheduleAtFixedRate(
+                () -> event.getChannel().sendTyping().queue(),
+                0, 8, TimeUnit.SECONDS);
 
-            // Delega la logica di business all'Application Service
-            chatBotService.processUserMessage(channelId, cleanMessage)
-                .subscribe(
-                    botResponse -> {
-                        logger.info("Risposta ricevuta per canale: {}, lunghezza: {} caratteri",
-                                   channelId, botResponse.length());
-                        sendLongMessage(event, botResponse);
-                    },
-                    error -> {
-                        logger.error("Errore durante l'elaborazione messaggio - Canale: {}", channelId, error);
-                        handleError(event, error, channelId);
-                    },
-                    () -> {
-                        // Ferma l'indicatore "sta scrivendo..." una volta completata l'elaborazione
-                        typingIndicator.cancel(false);
-                        executor.shutdown();
-                    }
-                );
-        } catch (Exception e) {
-            logger.error("Errore nell'elaborazione del messaggio - Canale: {}", channelId, e);
-            event.getChannel().sendMessage("🤖 Errore durante l'elaborazione. Riprova tra poco.").queue();
-        }
+        // Delega la logica di business all'Application Service
+        chatBotService.processUserMessage(channelId, cleanMessage)
+            .doFinally(signalType -> {
+                // Ferma l'indicatore "sta scrivendo..." e l'executor
+                typingIndicator.cancel(false);
+                executor.shutdown();
+                logger.debug("Indicatore 'sta scrivendo' fermato e executor spento per il canale: {}", channelId);
+            })
+            .subscribe(
+                botResponse -> {
+                    logger.info("Risposta ricevuta per canale: {}, lunghezza: {} caratteri",
+                               channelId, botResponse.length());
+                    sendLongMessage(event, botResponse);
+                },
+                error -> {
+                    logger.error("Errore durante l'elaborazione messaggio - Canale: {}", channelId, error);
+                    handleError(event, error, channelId);
+                }
+            );
     }
 
     private String cleanMessage(String rawContent) {
